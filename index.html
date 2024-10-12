@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-time Weather Monitoring</title>
+    
+    <!-- Include Firebase SDKs (version 8.x) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+    <h1>Real-time Weather Monitoring</h1>
+    <p>Temperature: <span id="temp">Loading...</span> °C</p>
+    <p>Humidity: <span id="humidity">Loading...</span> %</p>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",  // Replace with your API key
+            authDomain: "your-project-id.firebaseapp.com",  // Replace with your auth domain
+            databaseURL: "https://your-project-id.firebaseio.com/",  // Replace with your database URL
+            projectId: "your-project-id",  // Replace with your project ID
+            storageBucket: "your-project-id.appspot.com",  // Replace with your storage bucket
+            messagingSenderId: "your-sender-id",  // Replace with your sender ID
+            appId: "your-app-id"  // Replace with your app ID
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Reference to the weather data
+        const weatherRef = database.ref('weather');
+
+        // Listen for updates to the weather data
+        weatherRef.limitToLast(1).on('child_added', function(snapshot) {
+            const weatherData = snapshot.val();
+            console.log(weatherData);  // Log data for debugging
+            document.getElementById('temp').textContent = weatherData.temperature || 'N/A';
+            document.getElementById('humidity').textContent = weatherData.humidity || 'N/A';
+        });
+    </script>
+</body>
+</html>
